@@ -1,0 +1,43 @@
+[
+  {
+    "product_id": "PROD_WC_01",
+    "product_name": "Working Capital Express",
+    "target_segment": "Retail, Hospitality, Services, E-commerce",
+    "min_amount": 10000,
+    "max_amount": 100000,
+    "min_tenor_months": 3,
+    "max_tenor_months": 18,
+    "monthly_interest_rate": "1.25% - 2.10%",
+    "origination_fee_pct": 3.0,
+    "collateral_required": false,
+    "personal_guarantee_required": true,
+    "disbursement_speed": "24 to 48 hours upon document approval"
+  },
+  {
+    "product_id": "PROD_GRW_02",
+    "product_name": "SME Growth Facility",
+    "target_segment": "Manufacturing, Logistics, Healthcare, Tech",
+    "min_amount": 100000,
+    "max_amount": 500000,
+    "min_tenor_months": 12,
+    "max_tenor_months": 36,
+    "monthly_interest_rate": "0.95% - 1.50%",
+    "origination_fee_pct": 2.5,
+    "collateral_required": false,
+    "personal_guarantee_required": true,
+    "disbursement_speed": "3 to 5 business days"
+  },
+  {
+    "product_id": "PROD_INV_03",
+    "product_name": "Invoice Discounting & Factoring",
+    "target_segment": "B2B Wholesalers, Distributors, Government Contractors",
+    "min_amount": 25000,
+    "max_amount": 750000,
+    "advance_rate": "Up to 85% of eligible invoice face value",
+    "monthly_interest_rate": "0.80% - 1.20%",
+    "origination_fee_pct": 1.5,
+    "collateral_required": "Assigned Accounts Receivable",
+    "personal_guarantee_required": true,
+    "disbursement_speed": "Same day upon invoice verification"
+  }
+]
