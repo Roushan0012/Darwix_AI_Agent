@@ -1,0 +1,11 @@
+{
+  "business_name": "Apex Logistics",
+  "months_in_business": 28,
+  "monthly_revenue": 35000,
+  "loan_amount_requested": 50000,
+  "credit_score": 690,
+  "is_qualified": true,
+  "qualification_reason": "In progress",
+  "summary_notes": "Caller qualifies for unsecured working capital loan. 28 months in business, $35k avg monthly revenue, $50k requested, 690 credit score, no bankruptcies/defaults.",
+  "created_at": "2026-09-22T22:44:56.251023"
+}
