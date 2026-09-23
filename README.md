@@ -6,6 +6,61 @@ This repository contains the end-to-end, production-ready AI solutions for the *
 
 ## Unified System Architecture
 
+```mermaid
+flowchart TD
+    subgraph Q1["Q1: Knowledge-Grounded Voice Agent"]
+        User["User / Customer"] --> WebCalling["Voice Agent / Web Calling Interface<br/>(Groq Whisper ASR + Edge-TTS)"]
+        WebCalling --> StateMachine["Conversation State Machine<br/>(Tenure, Revenue, Credit Score)"]
+        StateMachine --> QualDecision{"Qualification &<br/>Objection Handling"}
+        QualDecision -->|"Qualified"| CRM["CRM Lead Record Export<br/>(data/leads/)"]
+        QualDecision -->|"Customer Escalation"| HumanEsc["Human Agent Escalation Webhook"]
+        QualDecision -->|"Unknown / Out-of-Scope"| Fallback["Strict Anti-Hallucination Fallback"]
+    end
+
+    subgraph Q2["Q2: Production-Ready Knowledge Base & Hybrid RAG"]
+        RawDocs["Raw Sources<br/>(Policies MD, Catalogs JSON, HTML with PII)"] --> Cleaner["PII Sanitizer & Szymkiewicz Containment Dedup"]
+        Cleaner --> Parser["Document Parser & 13 Traceable Chunks"]
+        Parser --> HybridIndex["Hybrid Search Engine"]
+        HybridIndex --> ChromaDB[("ChromaDB<br/>Dense Embeddings: all-MiniLM-L6-v2")]
+        HybridIndex --> BM25[("BM25Okapi<br/>Sparse Keyword Inverted Index")]
+        ChromaDB --> HybridRetrieval["Hybrid Reranking (0.5 Dense + 0.5 Sparse)"]
+        BM25 --> HybridRetrieval
+        HybridRetrieval --> Citations["Source Citations & Metadata"]
+    end
+
+    StateMachine <-->|"Dynamic Tool Call:<br/>query_knowledge_base"| HybridRetrieval
+
+    subgraph Q3["Q3: Native-Language SEA Voice Bots"]
+        direction LR
+        subgraph PH["Philippines Bancassurance"]
+            PH_Lang["Taglish Dialogue Engine<br/>(Authentic po/opo Etiquette)"]
+            PH_Lex["Insurance Financial Lexicon<br/>(premium, policy, beneficiary, rider, lapse)"]
+            PH_TTS["Filipino Neural TTS<br/>(fil-PH-BlessicaNeural)"]
+            PH_Lang --- PH_Lex --- PH_TTS
+        end
+        subgraph ID["Indonesia Multifinance"]
+            ID_Lang["Bahasa Indonesia Dialogue Engine<br/>(Formal Pak/Bu Etiquette)"]
+            ID_Lex["OJK Multifinance Lexicon<br/>(cicilan, tenor, denda, DP, restrukturisasi)"]
+            ID_TTS["Indonesian Neural TTS<br/>(id-ID-GadisNeural)"]
+            ID_Lang --- ID_Lex --- ID_TTS
+        end
+    end
+
+    subgraph Q4["Q4: Real-Time Audio Streaming Nudge Engine"]
+        LiveAudio["Live Call Audio Stream<br/>(1.0s - 1.5s Audio Slices)"] --> Streamer["Chunked Audio Streamer<br/>(Speaker Turn Separation)"]
+        Streamer --> StreamASR["Streaming ASR / Ingestion<br/>(~243ms)"]
+        StreamASR --> SignalDet["Fast LLM Signal Detector<br/>(Groq Llama-3.3-70b ~388ms)"]
+        SignalDet --> Signals{"Detected Signals"}
+        Signals -->|"Secondary Fleet Assets"| CrossSell["Missed Cross-Sell Alert"]
+        Signals -->|"Missing 3% Fee Disclosure"| Compliance["Compliance Gap Alert"]
+        Signals -->|"Customer Frustration"| DeEscalate["De-escalation Empathy Reminder"]
+        Signals -->|"Noise / Low Confidence"| Suppress["Silent Suppression<br/>(Zero False Alarms)"]
+        
+        CrossSell & Compliance & DeEscalate --> NudgeCtrl["Nudge Precision Controller"]
+        NudgeCtrl -->|"Confidence >80%<br/>Cooldown Period (30s)<br/>Expiry (15s)"| Copilot["Agent Co-Pilot Dashboard HUD<br/>(WebSocket P50: 631ms, P95: 908ms)"]
+    end
+```
+
 The repository integrates 4 tightly-coupled modules across the unified domain of **SME Business Lending & Consumer Finance / Bancassurance**:
 
 ```
