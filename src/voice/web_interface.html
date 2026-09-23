@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Darwix Voice — Knowledge-Grounded Calling Interface</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0a0d14;
+      --card-bg: rgba(18, 24, 38, 0.85);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --primary: #38bdf8;
+      --primary-glow: rgba(56, 189, 248, 0.25);
+      --accent: #818cf8;
+      --success: #34d399;
+      --warning: #fbbf24;
+      --danger: #f87171;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.12) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(129, 140, 248, 0.10) 0px, transparent 50%);
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: 1.25rem 2rem;
+      border-bottom: 1px solid var(--card-border);
+      backdrop-filter: blur(12px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo-badge {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: #050811;
+      box-shadow: 0 0 20px var(--primary-glow);
+    }
+
+    .brand h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .status-pill {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 0.9rem;
+      border-radius: 9999px;
+      background: rgba(52, 211, 153, 0.1);
+      border: 1px solid rgba(52, 211, 153, 0.25);
+      color: var(--success);
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--success);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--success);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.9); }
+    }
+
+    main {
+      flex: 1;
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 1.75rem;
+    }
+
+    .calling-panel {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      backdrop-filter: blur(16px);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .call-header {
+      padding: 1.25rem 1.75rem;
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .agent-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .agent-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1e293b, #334155);
+      border: 2px solid var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+    }
+
+    .transcript-container {
+      flex: 1;
+      padding: 1.5rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      min-height: 400px;
+      max-height: 500px;
+    }
+
+    .message-bubble {
+      display: flex;
+      flex-direction: column;
+      max-width: 82%;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .message-bubble.agent { align-self: flex-start; }
+    .message-bubble.user { align-self: flex-end; }
+
+    .bubble-header {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .bubble-content {
+      padding: 0.9rem 1.25rem;
+      border-radius: 16px;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .agent .bubble-content {
+      background: rgba(30, 41, 59, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom-left-radius: 4px;
+      color: #e2e8f0;
+    }
+
+    .user .bubble-content {
+      background: linear-gradient(135deg, #0284c7, #2563eb);
+      color: #ffffff;
+      border-bottom-right-radius: 4px;
+      box-shadow: 0 4px 15px rgba(2, 132, 199, 0.3);
+    }
+
+    .citation-badge {
+      display: inline-block;
+      margin-top: 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: var(--primary);
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+    }
+
+    .call-controls {
+      padding: 1.25rem 1.75rem;
+      border-top: 1px solid var(--card-border);
+      background: rgba(10, 14, 23, 0.85);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .voice-input {
+      flex: 1;
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 0.85rem 1.25rem;
+      color: #fff;
+      font-size: 0.95rem;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .voice-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 12px var(--primary-glow);
+    }
+
+    .btn {
+      padding: 0.85rem 1.4rem;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-mic {
+      background: rgba(248, 113, 113, 0.15);
+      border: 1px solid rgba(248, 113, 113, 0.35);
+      color: #f87171;
+    }
+
+    .btn-mic.recording {
+      background: #f87171;
+      color: #000;
+      animation: pulse 1s infinite;
+      box-shadow: 0 0 20px rgba(248, 113, 113, 0.5);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: #050811;
+      box-shadow: 0 4px 15px var(--primary-glow);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px var(--primary-glow);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+    }
+
+    .scenario-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .scenario-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 0.45rem 0.85rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .scenario-btn:hover {
+      color: var(--primary);
+      border-color: var(--primary);
+      background: rgba(56, 189, 248, 0.08);
+    }
+
+    /* Side HUD */
+    .hud-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .hud-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 1.5rem;
+      backdrop-filter: blur(16px);
+    }
+
+    .hud-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .criterion-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .criterion-item:last-child { border-bottom: none; }
+    .criterion-label { font-size: 0.85rem; color: var(--text-muted); }
+    .criterion-val { font-size: 0.85rem; font-weight: 600; font-family: 'JetBrains Mono', monospace; }
+
+    .badge-eligibility {
+      display: block;
+      text-align: center;
+      margin-top: 1rem;
+      padding: 0.6rem;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    .badge-pending {
+      background: rgba(251, 191, 36, 0.1);
+      border: 1px solid rgba(251, 191, 36, 0.25);
+      color: var(--warning);
+    }
+
+    .badge-qualified {
+      background: rgba(52, 211, 153, 0.1);
+      border: 1px solid rgba(52, 211, 153, 0.25);
+      color: var(--success);
+    }
+
+    .badge-escalated {
+      background: rgba(248, 113, 113, 0.1);
+      border: 1px solid rgba(248, 113, 113, 0.25);
+      color: var(--danger);
+    }
+
+    .rag-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0.7rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .rag-idle { background: rgba(255,255,255,0.06); color: var(--text-muted); }
+    .rag-active { background: rgba(52, 211, 153, 0.15); border: 1px solid var(--success); color: var(--success); }
+
+    .audio-player-bar {
+      margin-top: 0.6rem;
+      width: 100%;
+      height: 38px;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="logo-badge">D</div>
+      <div>
+        <h1>Darwix Voice</h1>
+        <p style="font-size: 0.75rem; color: var(--text-muted);">Knowledge-Grounded Inbound Voice Agent</p>
+      </div>
+    </div>
+    <div style="display: flex; gap: 1rem; align-items: center;">
+      <label style="font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.4rem; cursor: pointer;">
+        <input type="checkbox" id="voice-toggle" checked>
+        <span>🔊 Spoken Voice Output</span>
+      </label>
+      <div class="status-pill" id="global-status">
+        <span class="status-dot"></span>
+        <span id="status-text">Voice Agent Ready</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="calling-panel">
+      <div class="call-header">
+        <div class="agent-meta">
+          <div class="agent-avatar">🎙️</div>
+          <div>
+            <h3 style="font-size: 1rem; font-weight: 600;">Darwix Loan Specialist</h3>
+            <p style="font-size: 0.75rem; color: var(--text-muted);">Powered by Qwen-27B &bull; ChromaDB Grounded &bull; Edge-TTS</p>
+          </div>
+        </div>
+        <button class="btn btn-secondary" id="reset-call-btn" onclick="resetCall()">🔄 Reset Session</button>
+      </div>
+
+      <div class="transcript-container" id="transcript-box">
+        <div class="message-bubble agent">
+          <div class="bubble-header">Darwix Specialist &bull; Just now</div>
+          <div class="bubble-content">
+            Hello! Thank you for calling Darwix Capital. I am your business loan advisor. How can I help your business with working capital or growth financing today?
+          </div>
+        </div>
+      </div>
+
+      <div class="call-controls">
+        <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">1-Click Test Scenarios (Question 1 Rubric):</div>
+        <div class="scenario-bar">
+          <button class="scenario-btn" onclick="triggerScenario('cooperative')">✅ 1. Cooperative Customer</button>
+          <button class="scenario-btn" onclick="triggerScenario('objection')">💡 2. Rate Objection (RAG)</button>
+          <button class="scenario-btn" onclick="triggerScenario('incomplete')">⚠️ 3. Incomplete Details</button>
+          <button class="scenario-btn" onclick="triggerScenario('outofscope')">🛡️ 4. Out-of-Scope Fallback</button>
+          <button class="scenario-btn" onclick="triggerScenario('escalate')">🚨 5. Human Escalation</button>
+        </div>
+
+        <div class="input-row">
+          <button class="btn btn-mic" id="mic-btn" onclick="toggleMicrophone()" title="Click to speak via Microphone">
+            <span id="mic-icon">🎙️</span> <span id="mic-label">Speak</span>
+          </button>
+          <input type="text" class="voice-input" id="caller-input" placeholder="Type customer message or click 'Speak' to talk..." onkeydown="if(event.key==='Enter') sendTurn()">
+          <button class="btn btn-primary" onclick="sendTurn()">Send Message</button>
+        </div>
+        <audio id="agent-audio" class="audio-player-bar" controls style="display:none;"></audio>
+      </div>
+    </section>
+
+    <aside class="hud-panel">
+      <div class="hud-card">
+        <div class="hud-title">
+          <span>Underwriting Checklist</span>
+          <span style="font-size: 0.72rem; color: var(--primary);">Real-Time State</span>
+        </div>
+        <div class="criterion-item">
+          <span class="criterion-label">Business Tenure (&ge; 12 mo)</span>
+          <span class="criterion-val" id="hud-tenure">-</span>
+        </div>
+        <div class="criterion-item">
+          <span class="criterion-label">Monthly Revenue (&ge; $15k)</span>
+          <span class="criterion-val" id="hud-revenue">-</span>
+        </div>
+        <div class="criterion-item">
+          <span class="criterion-label">Credit Score (&ge; 620)</span>
+          <span class="criterion-val" id="hud-credit">-</span>
+        </div>
+        <div class="criterion-item">
+          <span class="criterion-label">Loan Facility Requested</span>
+          <span class="criterion-val" id="hud-amount">-</span>
+        </div>
+
+        <div class="badge-eligibility badge-pending" id="eligibility-badge">
+          Status: EVALUATION IN PROGRESS
+        </div>
+      </div>
+
+      <div class="hud-card">
+        <div class="hud-title">
+          <span>Grounding & Traceability</span>
+          <span class="rag-status-badge rag-idle" id="rag-indicator">TOOL: IDLE</span>
+        </div>
+        <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 0.75rem;">
+          When asked policy, rate, or objection questions, the agent dynamically searches the Question 2 ChromaDB+BM25 index and cites verified sources.
+        </p>
+        <div id="active-citations" style="font-size: 0.78rem; display: flex; flex-direction: column; gap: 0.5rem;">
+          <div style="background: rgba(255,255,255,0.03); border: 1px dashed var(--card-border); padding: 0.75rem; border-radius: 8px; color: var(--text-muted); text-align: center;">
+            No knowledge queries yet.<br><span style="color: var(--primary);">Click "2. Rate Objection (RAG)" above to test!</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <script>
+    let sessionId = "call_" + Math.random().toString(36).substring(2, 9);
+    let isRecording = false;
+    let mediaRecorder = null;
+    let audioChunks = [];
+
+    // Hardware MediaRecorder Pipeline (Direct microphone streaming to Groq Whisper)
+    async function toggleMicrophone() {
+      if (isRecording) {
+        stopRecordingAndSend();
+      } else {
+        await startRecording();
+      }
+    }
+
+    async function startRecording() {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        alert("Microphone access is not supported by your browser. You can type in the box directly.");
+        return;
+      }
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        audioChunks = [];
+        mediaRecorder = new MediaRecorder(stream);
+
+        mediaRecorder.ondataavailable = (e) => {
+          if (e.data.size > 0) audioChunks.push(e.data);
+        };
+
+        mediaRecorder.onstop = async () => {
+          stream.getTracks().forEach(track => track.stop());
+          const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+          await sendAudioBlob(audioBlob);
+        };
+
+        mediaRecorder.start();
+        isRecording = true;
+        document.getElementById("mic-btn").classList.add("recording");
+        document.getElementById("mic-label").innerText = "🛑 Stop & Send";
+        document.getElementById("status-text").innerText = "🔴 Recording microphone... Speak now!";
+        document.getElementById("caller-input").placeholder = "Recording your voice... Click 'Stop & Send' when done speaking!";
+      } catch (err) {
+        console.error("Microphone access error:", err);
+        alert("Please allow microphone permissions in your browser to speak, or use the 1-click test scenarios!");
+      }
+    }
+
+    function stopRecordingAndSend() {
+      if (mediaRecorder && isRecording) {
+        mediaRecorder.stop();
+        isRecording = false;
+        document.getElementById("mic-btn").classList.remove("recording");
+        document.getElementById("mic-label").innerText = "Speak";
+        document.getElementById("status-text").innerText = "Transcribing with Groq Whisper...";
+        document.getElementById("caller-input").placeholder = "Processing speech...";
+      }
+    }
+
+    async function sendAudioBlob(blob) {
+      const formData = new FormData();
+      formData.append("audio_file", blob, "user_audio.webm");
+      formData.append("session_id", sessionId);
+
+      document.getElementById("status-text").innerText = "Specialist Thinking & Querying Knowledge Base...";
+      document.getElementById("rag-indicator").className = "rag-status-badge rag-active";
+      document.getElementById("rag-indicator").innerText = "SEARCHING KB...";
+
+      try {
+        const response = await fetch("/api/voice/audio_turn", {
+          method: "POST",
+          body: formData
+        });
+        const data = await response.json();
+
+        const userText = data.user_transcript || "Spoken Audio Query";
+        document.getElementById("caller-input").value = "";
+        document.getElementById("caller-input").placeholder = "Type customer message or click 'Speak' to talk...";
+
+        appendMessage("user", userText);
+        appendMessage("agent", data.bot_response, data.citations_used);
+        updateHUD(data);
+
+        // Spoken audio playback
+        if (data.audio_url) {
+          const audio = document.getElementById("agent-audio");
+          audio.src = data.audio_url;
+          audio.style.display = "block";
+          audio.play().catch(e => {
+            speakText(data.bot_response);
+          });
+        } else {
+          speakText(data.bot_response);
+        }
+
+        document.getElementById("status-text").innerText = data.escalated ? "Call Escalated to Specialist" : "Voice Agent Connected";
+      } catch (err) {
+        console.error(err);
+        appendMessage("agent", "Error processing audio.");
+        document.getElementById("status-text").innerText = "Error";
+        document.getElementById("rag-indicator").className = "rag-status-badge rag-idle";
+        document.getElementById("rag-indicator").innerText = "ERROR";
+      }
+    }
+
+    // Spoken Audio Output using browser speech engine
+    function speakText(text) {
+      if (!document.getElementById("voice-toggle").checked) return;
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const clean = text.replace(/[*#_]/g, '');
+        const utterance = new SpeechSynthesisUtterance(clean);
+        utterance.rate = 1.05;
+        utterance.pitch = 1.0;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    const SCENARIOS = {
+      cooperative: "Hi, I run Apex Supply Co. We've been in business for 24 months, doing about $28,000 monthly revenue. I'm looking for a $50,000 working capital loan, and my credit score is around 680.",
+      objection: "I saw your rates are around 1.5% a month. Why is your interest rate higher than traditional tier-1 banks like Chase or Bank of America?",
+      incomplete: "Hey, I need some fast cash for inventory, maybe $20,000. But I don't know my exact revenue or credit score.",
+      outofscope: "Do you guys offer personal auto loans for teenagers or pet health insurance?",
+      escalate: "Look, I have a complicated corporate partnership issue. Please transfer me to a human representative right now."
+    };
+
+    function triggerScenario(key) {
+      document.getElementById("caller-input").value = SCENARIOS[key];
+      sendTurn();
+    }
+
+    async function sendTurn() {
+      const input = document.getElementById("caller-input");
+      const text = input.value.trim();
+      if (!text) return;
+
+      appendMessage("user", text);
+      input.value = "";
+      document.getElementById("status-text").innerText = "Specialist Thinking & Querying Knowledge Base...";
+      document.getElementById("rag-indicator").className = "rag-status-badge rag-active";
+      document.getElementById("rag-indicator").innerText = "SEARCHING KB...";
+
+      try {
+        const response = await fetch("/api/voice/turn", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ session_id: sessionId, text: text })
+        });
+        const data = await response.json();
+        
+        appendMessage("agent", data.bot_response, data.citations_used);
+        updateHUD(data);
+
+        // Play spoken audio: First try HTML5 audio element from server
+        if (data.audio_url) {
+          const audio = document.getElementById("agent-audio");
+          audio.src = data.audio_url;
+          audio.style.display = "block";
+          audio.play().catch(e => {
+            console.log("HTML5 audio autoplay prevented by browser; using SpeechSynthesis:", e);
+            speakText(data.bot_response);
+          });
+        } else {
+          speakText(data.bot_response);
+        }
+
+        document.getElementById("status-text").innerText = data.escalated ? "Call Escalated to Specialist" : "Voice Agent Connected";
+      } catch (err) {
+        console.error(err);
+        appendMessage("agent", "Error communicating with server.");
+        document.getElementById("status-text").innerText = "Connection Error";
+        document.getElementById("rag-indicator").className = "rag-status-badge rag-idle";
+        document.getElementById("rag-indicator").innerText = "ERROR";
+      }
+    }
+
+    function appendMessage(sender, text, citations = []) {
+      const box = document.getElementById("transcript-box");
+      const bubble = document.createElement("div");
+      bubble.className = `message-bubble ${sender}`;
+
+      const header = document.createElement("div");
+      header.className = "bubble-header";
+      header.innerText = sender === "agent" ? "Darwix Specialist • Just now" : "Caller • Just now";
+
+      const content = document.createElement("div");
+      content.className = "bubble-content";
+      content.innerText = text;
+
+      if (citations && citations.length > 0) {
+        citations.forEach(cit => {
+          const citEl = document.createElement("div");
+          citEl.className = "citation-badge";
+          citEl.innerText = `🔍 RAG Verified: ${cit}`;
+          content.appendChild(citEl);
+        });
+      }
+
+      bubble.appendChild(header);
+      bubble.appendChild(content);
+      box.appendChild(bubble);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function updateHUD(data) {
+      const lead = data.lead_data || {};
+      if (lead.months_in_business) document.getElementById("hud-tenure").innerText = `${lead.months_in_business} months`;
+      if (lead.monthly_revenue) document.getElementById("hud-revenue").innerText = `$${Number(lead.monthly_revenue).toLocaleString()}`;
+      if (lead.credit_score) document.getElementById("hud-credit").innerText = lead.credit_score;
+      if (lead.loan_amount_requested) document.getElementById("hud-amount").innerText = `$${Number(lead.loan_amount_requested).toLocaleString()}`;
+
+      const badge = document.getElementById("eligibility-badge");
+      if (data.escalated) {
+        badge.className = "badge-eligibility badge-escalated";
+        badge.innerText = `ESCALATED: ${data.lead_data?.qualification_reason || 'Human Transfer Requested'}`;
+      } else if (data.status === "QUALIFIED") {
+        badge.className = "badge-eligibility badge-qualified";
+        badge.innerText = "STATUS: PRELIMINARY QUALIFIED ✅";
+      } else {
+        badge.className = "badge-eligibility badge-pending";
+        badge.innerText = `STATUS: ${data.status}`;
+      }
+
+      // Update citations list and RAG indicator
+      const citBox = document.getElementById("active-citations");
+      const indicator = document.getElementById("rag-indicator");
+      if (data.citations_used && data.citations_used.length > 0) {
+        indicator.className = "rag-status-badge rag-active";
+        indicator.innerText = "RAG VERIFIED ✅";
+        citBox.innerHTML = "";
+        data.citations_used.forEach(c => {
+          const div = document.createElement("div");
+          div.style.background = "rgba(56, 189, 248, 0.1)";
+          div.style.border = "1px solid rgba(56, 189, 248, 0.25)";
+          div.style.borderRadius = "8px";
+          div.style.padding = "0.6rem";
+          div.style.color = "var(--primary)";
+          div.innerHTML = `<strong>Grounding Source:</strong><br>${c}`;
+          citBox.appendChild(div);
+        });
+      } else {
+        indicator.className = "rag-status-badge rag-idle";
+        indicator.innerText = "DIRECT FLOW";
+      }
+    }
+
+    function resetCall() {
+      sessionId = "call_" + Math.random().toString(36).substring(2, 9);
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      document.getElementById("transcript-box").innerHTML = `
+        <div class="message-bubble agent">
+          <div class="bubble-header">Darwix Specialist &bull; Just now</div>
+          <div class="bubble-content">
+            Hello! Thank you for calling Darwix Capital. I am your business loan advisor. How can I help your business with working capital or growth financing today?
+          </div>
+        </div>
+      `;
+      document.getElementById("hud-tenure").innerText = "-";
+      document.getElementById("hud-revenue").innerText = "-";
+      document.getElementById("hud-credit").innerText = "-";
+      document.getElementById("hud-amount").innerText = "-";
+      document.getElementById("eligibility-badge").className = "badge-eligibility badge-pending";
+      document.getElementById("eligibility-badge").innerText = "Status: EVALUATION IN PROGRESS";
+      document.getElementById("rag-indicator").className = "rag-status-badge rag-idle";
+      document.getElementById("rag-indicator").innerText = "TOOL: IDLE";
+      document.getElementById("active-citations").innerHTML = `
+        <div style="background: rgba(255,255,255,0.03); border: 1px dashed var(--card-border); padding: 0.75rem; border-radius: 8px; color: var(--text-muted); text-align: center;">
+          No knowledge queries yet.<br><span style="color: var(--primary);">Click "2. Rate Objection (RAG)" above to test!</span>
+        </div>
+      `;
+      document.getElementById("agent-audio").style.display = "none";
+    }
+  </script>
+</body>
+</html>
