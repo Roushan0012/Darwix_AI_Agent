@@ -1,0 +1,199 @@
+[
+  {
+    "record_id": "kb_credit_001",
+    "title": "Darwix Capital SME Credit Policy & Underwriting Guidelines",
+    "content": "Darwix Capital SME Credit Policy & Underwriting Guidelines\nDocument Reference: POL-UW-2026-v2.1\nEffective Date: 2026-01-15\nAuthor: Credit Risk Committee",
+    "category": "general_policy",
+    "source": "credit_policy_v2.md#section_1",
+    "version": "2.1",
+    "pii": false,
+    "metadata": {
+      "source_file": "credit_policy_v2.md",
+      "raw_had_pii": false
+    }
+  },
+  {
+    "record_id": "kb_credit_002",
+    "title": "Section 1: Minimum Borrower Qualification Criteria",
+    "content": "# Section 1: Minimum Borrower Qualification Criteria\n\nTo qualify for an unsecured SME Working Capital Loan or Growth Facility, the applicant business must meet the following mandatory baseline thresholds:\n\n1. **Operating History**: The business entity must have been registered and actively operating for a minimum of 12 consecutive months. Startups under 12 months require a secured asset-backed pledge or a creditworthy corporate guarantor.\n2. **Revenue Requirements**: Minimum verified average monthly revenue of $15,000 over the preceding 6 months (supported by official business bank statements or VAT filings).\n3. **Credit Profile**: Principal director or guarantor must possess a minimum credit bureau score of 620 with no active bankruptcies, court judgments, or defaults in the trailing 24 months.\n4. **Geography & Registration**: Must be a legally registered business entity (LLC, Corporation, or Registered Sole Proprietorship) operating within approved jurisdictions.",
+    "category": "qualification_rules",
+    "source": "credit_policy_v2.md#section_2",
+    "version": "2.1",
+    "pii": false,
+    "metadata": {
+      "source_file": "credit_policy_v2.md",
+      "raw_had_pii": false
+    }
+  },
+  {
+    "record_id": "kb_credit_003",
+    "title": "Section 2: Loan Amounts, Tenors, and Pricing Structure",
+    "content": "# Section 2: Loan Amounts, Tenors, and Pricing Structure\n\n- **Working Capital Express**:\n - Facility Size: $10,000 to $100,000\n - Tenor: 3 to 18 months\n - Repayment Frequency: Weekly or Monthly ACH / direct debit\n - Nominal Interest Rate: 1.25% - 2.10% per month (effective APR 15% - 25.2%)\n - Origination Fee: 3.0% deducted at disbursement\n\n- **SME Growth Expansion Loan**:\n - Facility Size: $100,000 to $500,000\n - Tenor: 12 to 36 months\n - Repayment Frequency: Monthly amortized\n - Nominal Interest Rate: 0.95% - 1.50% per month\n - Origination Fee: 2.5% deducted at disbursement",
+    "category": "product_terms",
+    "source": "credit_policy_v2.md#section_3",
+    "version": "2.1",
+    "pii": false,
+    "metadata": {
+      "source_file": "credit_policy_v2.md",
+      "raw_had_pii": false
+    }
+  },
+  {
+    "record_id": "kb_credit_004",
+    "title": "Section 3: Early Repayment & Pre-termination Policy",
+    "content": "# Section 3: Early Repayment & Pre-termination Policy\n\nBorrowers may repay their loan in full at any time prior to the maturity date.\n- **Prepayment Penalty**: Zero penalty for early repayment after 6 months of on-time payments.\n- If prepayment occurs within the first 6 months, a flat administrative rebate adjustment fee of 1.5% of the remaining principal balance applies.\n- Interest is charged only on the pro-rated period during which capital was deployed.",
+    "category": "product_terms",
+    "source": "credit_policy_v2.md#section_4",
+    "version": "2.1",
+    "pii": false,
+    "metadata": {
+      "source_file": "credit_policy_v2.md",
+      "raw_had_pii": false
+    }
+  },
+  {
+    "record_id": "kb_custom_002",
+    "title": "Objection 1: \"Why is your Nominal Interest Rate higher than traditional tier-1 commercial banks?\"",
+    "content": "## Objection 1: \"Why is your Nominal Interest Rate higher than traditional tier-1 commercial banks?\"\n**Response & Grounded Rationale**:\nTraditional commercial banks typically advertise nominal rates of 7% - 10% APR, but their qualification process requires physical real estate collateral, audited financial statements for 3+ years, and approval turnaround cycles of 60 to 90 days with high rejection rates (>75% for small businesses).\nDarwix Capital provides **unsecured financing** (no real estate collateral required), automated underwriting based on real-time cash flow and bank statements, and funds disbursed directly to your operating account within **24 to 48 hours**. We solve urgent liquidity needs where timing is critical.",
+    "category": "objections_and_faqs",
+    "source": "customer_objections_faq.md#section_2",
+    "version": "2.1",
+    "pii": false,
+    "metadata": {
+      "source_file": "customer_objections_faq.md",
+      "raw_had_pii": false
+    }
+  },
+  {
+    "record_id": "kb_custom_003",
+    "title": "Objection 2: \"Do I need to pledge my home or commercial property as collateral?\"",
+    "content": "## Objection 2: \"Do I need to pledge my home or commercial property as collateral?\"\n**Response & Grounded Rationale**:\nNo. Our Working Capital Express and SME Growth facilities are **100% unsecured** regarding physical assets. We do not place liens on your personal residential property. We require only a standard corporate resolution and a principal director's personal guarantee to ensure business commitment.",
+    "category": "objections_and_faqs",
+    "source": "customer_objections_faq.md#section_3",
+    "version": "2.1",
+    "pii": false,
+    "metadata": {
+      "source_file": "customer_objections_faq.md",
+      "raw_had_pii": false
+    }
+  },
+  {
+    "record_id": "kb_custom_004",
+    "title": "Objection 3: \"Are there hidden fees or surprise charges?\"",
+    "content": "## Objection 3: \"Are there hidden fees or surprise charges?\"\n**Response & Grounded Rationale**:\nDarwix Capital operates on complete fee transparency. There are only two fee components:\n1. The agreed nominal interest rate stated clearly in your term sheet.\n2. A one-time origination processing fee (between 2.5% and 3.0%) which is deducted directly at disbursement.\nThere are zero application fees, zero monthly maintenance fees, and zero prepayment penalties if the loan is paid off after 6 months.",
+    "category": "objections_and_faqs",
+    "source": "customer_objections_faq.md#section_4",
+    "version": "2.1",
+    "pii": false,
+    "metadata": {
+      "source_file": "customer_objections_faq.md",
+      "raw_had_pii": false
+    }
+  },
+  {
+    "record_id": "kb_custom_005",
+    "title": "FAQ 4: \"What happens if my business revenue temporarily dips?\"",
+    "content": "## FAQ 4: \"What happens if my business revenue temporarily dips?\"\n**Response & Grounded Rationale**:\nBorrowers in good standing who face temporary cash flow seasonality may request a payment relief restructuring or a temporary tenor extension by notifying their account manager at least 10 business days prior to the next billing cycle.",
+    "category": "objections_and_faqs",
+    "source": "customer_objections_faq.md#section_5",
+    "version": "2.1",
+    "pii": false,
+    "metadata": {
+      "source_file": "customer_objections_faq.md",
+      "raw_had_pii": false
+    }
+  },
+  {
+    "record_id": "kb_table_prod_wc_01",
+    "title": "Working Capital Express Terms & Parameters",
+    "content": "Product: Working Capital Express (PROD_WC_01)\nTarget Segment: Retail, Hospitality, Services, E-commerce\nFacility Amount Range: $10,000 to $100,000\nTenor Duration: 3 to 18 months\nNominal Interest Rate: 1.25% - 2.10%\nOrigination Processing Fee: 3.0%\nCollateral Required: No (Unsecured)\nPersonal Guarantee Required: Yes\nFunding Speed: 24 to 48 hours upon document approval",
+    "category": "product_terms",
+    "source": "loan_products_table.json#PROD_WC_01",
+    "version": "1.0",
+    "pii": false,
+    "metadata": {
+      "product_id": "PROD_WC_01",
+      "product_name": "Working Capital Express",
+      "target_segment": "Retail, Hospitality, Services, E-commerce",
+      "min_amount": 10000,
+      "max_amount": 100000,
+      "min_tenor_months": 3,
+      "max_tenor_months": 18,
+      "monthly_interest_rate": "1.25% - 2.10%",
+      "origination_fee_pct": 3.0,
+      "collateral_required": false,
+      "personal_guarantee_required": true,
+      "disbursement_speed": "24 to 48 hours upon document approval"
+    }
+  },
+  {
+    "record_id": "kb_table_prod_grw_02",
+    "title": "SME Growth Facility Terms & Parameters",
+    "content": "Product: SME Growth Facility (PROD_GRW_02)\nTarget Segment: Manufacturing, Logistics, Healthcare, Tech\nFacility Amount Range: $100,000 to $500,000\nTenor Duration: 12 to 36 months\nNominal Interest Rate: 0.95% - 1.50%\nOrigination Processing Fee: 2.5%\nCollateral Required: No (Unsecured)\nPersonal Guarantee Required: Yes\nFunding Speed: 3 to 5 business days",
+    "category": "product_terms",
+    "source": "loan_products_table.json#PROD_GRW_02",
+    "version": "1.0",
+    "pii": false,
+    "metadata": {
+      "product_id": "PROD_GRW_02",
+      "product_name": "SME Growth Facility",
+      "target_segment": "Manufacturing, Logistics, Healthcare, Tech",
+      "min_amount": 100000,
+      "max_amount": 500000,
+      "min_tenor_months": 12,
+      "max_tenor_months": 36,
+      "monthly_interest_rate": "0.95% - 1.50%",
+      "origination_fee_pct": 2.5,
+      "collateral_required": false,
+      "personal_guarantee_required": true,
+      "disbursement_speed": "3 to 5 business days"
+    }
+  },
+  {
+    "record_id": "kb_table_prod_inv_03",
+    "title": "Invoice Discounting & Factoring Terms & Parameters",
+    "content": "Product: Invoice Discounting & Factoring (PROD_INV_03)\nTarget Segment: B2B Wholesalers, Distributors, Government Contractors\nFacility Amount Range: $25,000 to $750,000\nTenor Duration: 0 to 0 months\nNominal Interest Rate: 0.80% - 1.20%\nOrigination Processing Fee: 1.5%\nCollateral Required: Yes\nPersonal Guarantee Required: Yes\nFunding Speed: Same day upon invoice verification",
+    "category": "product_terms",
+    "source": "loan_products_table.json#PROD_INV_03",
+    "version": "1.0",
+    "pii": false,
+    "metadata": {
+      "product_id": "PROD_INV_03",
+      "product_name": "Invoice Discounting & Factoring",
+      "target_segment": "B2B Wholesalers, Distributors, Government Contractors",
+      "min_amount": 25000,
+      "max_amount": 750000,
+      "advance_rate": "Up to 85% of eligible invoice face value",
+      "monthly_interest_rate": "0.80% - 1.20%",
+      "origination_fee_pct": 1.5,
+      "collateral_required": "Assigned Accounts Receivable",
+      "personal_guarantee_required": true,
+      "disbursement_speed": "Same day upon invoice verification"
+    }
+  },
+  {
+    "record_id": "kb_product_001",
+    "title": "Branch Partnership Benefits",
+    "content": "Branch Partnership Benefits \n Operational, marketing, and technology support is provided to branch partners. Partners gain access to our proprietary underwriting portal, co-branded loan origination collateral, automated commission settlement within 7 business days, and dedicated relationship manager escalations. \n Authorized brokers and bank referral partners receive up to 1.75% trailing origination commission on every successfully disbursed enterprise SME facility.",
+    "category": "partnership_benefits",
+    "source": "scraped_website_with_pii.html#article",
+    "version": "1.0",
+    "pii": false,
+    "metadata": {
+      "had_pii": false
+    }
+  },
+  {
+    "record_id": "kb_pilot_inquiries_002",
+    "title": "Pilot Inquiry Records (Sanitized)",
+    "content": "Recent Pilot Inquiries (Pending Review) \n\n Applicant: [REDACTED_NAME]: [REDACTED_EMAIL] \n Phone: [REDACTED_PHONE] \n Tax ID / SSN: [REDACTED_TAX_ID] \n Notes: Inquiring about $75,000 working capital for inventory expansion. In business for 2 years, monthly bank deposits avg $28,000. \n\n Applicant: [REDACTED_NAME]: [REDACTED_EMAIL] \n Phone: [REDACTED_PHONE] \n Tax ID / SSN: [REDACTED_TAX_ID] \n Notes: Looking for $35,000 12-month facility. Operational 14 months, avg revenue $19,500.",
+    "category": "customer_samples",
+    "source": "scraped_website_with_pii.html#sample-submissions",
+    "version": "1.0",
+    "pii": false,
+    "metadata": {
+      "had_pii": true,
+      "pii_redacted": true
+    }
+  }
+]
