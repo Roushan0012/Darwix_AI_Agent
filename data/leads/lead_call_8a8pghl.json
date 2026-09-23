@@ -1,0 +1,11 @@
+{
+  "business_name": "Apex Supply Co.",
+  "months_in_business": 24,
+  "monthly_revenue": 28000,
+  "loan_amount_requested": 50000,
+  "credit_score": 680,
+  "is_qualified": true,
+  "qualification_reason": "In progress",
+  "summary_notes": "Meets all underwriting criteria: 24 months in business, $28k monthly revenue, 680 credit score, no active bankruptcies or judgments in trailing 24 months.",
+  "created_at": "2026-09-23T07:32:45.907363"
+}
