@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+
+# Environment variables & secrets (CRITICAL)
+.env
+.env.local
+*.pem
+*.key
+
+# Vector Database local persistence
+.chroma/
+.chroma_kb/
+chroma_db/
+*.sqlite3
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Audio / Transcripts recordings
+scratch/
+temp_audio/
+recordings/resp_*.mp3
+recordings/turn_*.mp3
