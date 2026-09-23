@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Darwix Live — Agent Co-Pilot & Streaming Nudges</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #080c14;
+      --card-bg: rgba(16, 23, 38, 0.85);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --primary: #38bdf8;
+      --accent: #a855f7;
+      --success: #34d399;
+      --danger: #f87171;
+      --warning: #fbbf24;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg-dark);
+      background-image: radial-gradient(at 0% 0%, rgba(168, 85, 247, 0.12) 0px, transparent 50%),
+                        radial-gradient(at 100% 100%, rgba(56, 189, 248, 0.12) 0px, transparent 50%);
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: 1.25rem 2.5rem;
+      border-bottom: 1px solid var(--card-border);
+      backdrop-filter: blur(16px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--accent), var(--primary));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #050811;
+      box-shadow: 0 0 25px rgba(168, 85, 247, 0.4);
+    }
+
+    .live-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: rgba(248, 113, 113, 0.15);
+      border: 1px solid rgba(248, 113, 113, 0.3);
+      padding: 0.4rem 0.9rem;
+      border-radius: 9999px;
+      color: var(--danger);
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--danger);
+      border-radius: 50%;
+      animation: blink 1.2s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.2; }
+    }
+
+    main {
+      flex: 1;
+      max-width: 1480px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: 1fr 440px;
+      gap: 2rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      backdrop-filter: blur(16px);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-header {
+      padding: 1.25rem 1.75rem;
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    /* Live Transcript Feed */
+    .stream-feed {
+      flex: 1;
+      padding: 1.5rem;
+      overflow-y: auto;
+      min-height: 480px;
+      max-height: 560px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .feed-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      animation: slideUp 0.25s ease;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .speaker-tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .speaker-agent { color: var(--primary); }
+    .speaker-customer { color: #f472b6; }
+
+    .chunk-bubble {
+      padding: 0.85rem 1.2rem;
+      border-radius: 12px;
+      font-size: 0.92rem;
+      line-height: 1.45;
+    }
+
+    .feed-item.agent .chunk-bubble {
+      background: rgba(56, 189, 248, 0.08);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+    }
+
+    .feed-item.customer .chunk-bubble {
+      background: rgba(244, 114, 182, 0.08);
+      border: 1px solid rgba(244, 114, 182, 0.2);
+    }
+
+    /* Right Column: Nudge Co-pilot & Latency */
+    .copilot-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .nudges-stream {
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      min-height: 280px;
+      max-height: 380px;
+      overflow-y: auto;
+    }
+
+    .nudge-card {
+      border-radius: 14px;
+      padding: 1rem 1.25rem;
+      animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 1px solid;
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.92); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .nudge-compliance {
+      background: rgba(248, 113, 113, 0.12);
+      border-color: rgba(248, 113, 113, 0.35);
+    }
+
+    .nudge-crosssell {
+      background: rgba(56, 189, 248, 0.12);
+      border-color: rgba(56, 189, 248, 0.35);
+    }
+
+    .nudge-frustration {
+      background: rgba(251, 191, 36, 0.12);
+      border-color: rgba(251, 191, 36, 0.35);
+    }
+
+    .nudge-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .nudge-badge {
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .badge-compliance { background: var(--danger); color: #000; }
+    .badge-crosssell { background: var(--primary); color: #000; }
+    .badge-frustration { background: var(--warning); color: #000; }
+
+    .nudge-content {
+      font-size: 0.9rem;
+      font-weight: 600;
+      line-height: 1.4;
+      margin-bottom: 0.5rem;
+    }
+
+    .nudge-evidence {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-style: italic;
+      border-left: 2px solid rgba(255, 255, 255, 0.2);
+      padding-left: 0.5rem;
+    }
+
+    /* Latency Waterfall HUD */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      padding: 1.25rem;
+    }
+
+    .metric-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 0.9rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .metric-title {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .metric-val {
+      font-size: 1.4rem;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--primary);
+    }
+
+    /* Controls Bar */
+    .controls-strip {
+      padding: 1.25rem 1.75rem;
+      border-top: 1px solid var(--card-border);
+      background: rgba(10, 14, 23, 0.8);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 0.7rem 1.4rem;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .btn-simulate {
+      background: linear-gradient(135deg, var(--accent), var(--primary));
+      color: #050811;
+      box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
+    }
+
+    .btn-simulate:hover { transform: translateY(-1px); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="brand-icon">⚡</div>
+      <div>
+        <h1 style="font-size: 1.2rem; font-weight: 800;">Darwix Live Insights & Nudges</h1>
+        <p style="font-size: 0.75rem; color: var(--text-muted);">Real-Time Audio Streaming Co-Pilot &bull; Question 4</p>
+      </div>
+    </div>
+    <div class="live-indicator">
+      <span class="live-dot"></span>
+      <span id="pipeline-status">PIPELINE ACTIVE (STREAMING 1X)</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="card">
+      <div class="card-header">
+        <div class="card-title">🎙️ Continuous Call Audio Stream</div>
+        <div style="font-size: 0.8rem; color: var(--text-muted);" id="chunk-counter">Chunks: 0</div>
+      </div>
+
+      <div class="stream-feed" id="stream-feed">
+        <div style="text-align: center; color: var(--text-muted); padding: 3rem; font-size: 0.9rem;">
+          Click <b>"Start Live Stream Simulation"</b> below to stream call audio in real-time chunks.
+        </div>
+      </div>
+
+      <div class="controls-strip">
+        <div style="display: flex; gap: 0.5rem;">
+          <select id="scenario-selector" style="background: rgba(30, 41, 59, 0.8); color: #fff; border: 1px solid var(--card-border); border-radius: 8px; padding: 0.5rem 0.8rem; font-size: 0.85rem;">
+            <option value="cross_sell">Scenario 1: Missed Cross-Sell (Fleet Expansion)</option>
+            <option value="compliance">Scenario 2: Compliance Gap (Missing Origination Fee)</option>
+            <option value="frustration">Scenario 3: Rising Customer Frustration</option>
+            <option value="noisy">Scenario 4: Ambiguous / Noisy Audio (Suppressed)</option>
+          </select>
+          <button class="btn btn-simulate" onclick="runSimulation()">▶️ Stream Audio Call</button>
+        </div>
+        <button class="btn" style="background: rgba(255,255,255,0.06); color: #fff;" onclick="clearFeed()">Clear Feed</button>
+      </div>
+    </section>
+
+    <aside class="copilot-sidebar">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">💡 Active Live Nudges</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">Threshold: &ge; 80%</div>
+        </div>
+        <div class="nudges-stream" id="nudges-stream">
+          <div style="text-align: center; color: var(--text-muted); padding: 2rem; font-size: 0.85rem;">
+            No live alerts yet. Monitoring audio stream...
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">⏱️ Latency Waterfall Benchmarks</div>
+        </div>
+        <div class="metrics-grid">
+          <div class="metric-box">
+            <span class="metric-title">End-to-End P50</span>
+            <span class="metric-val" id="lat-p50">780 ms</span>
+          </div>
+          <div class="metric-box">
+            <span class="metric-title">End-to-End P95</span>
+            <span class="metric-val" id="lat-p95" style="color: var(--accent);">995 ms</span>
+          </div>
+          <div class="metric-box">
+            <span class="metric-title">ASR Streaming</span>
+            <span class="metric-val" id="lat-asr">240 ms</span>
+          </div>
+          <div class="metric-box">
+            <span class="metric-title">Signal LLM (Groq)</span>
+            <span class="metric-val" id="lat-llm">520 ms</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <script>
+    const TEST_SCENARIOS = {
+      cross_sell: [
+        { speaker: "agent", text: "Welcome to Darwix Capital, I can certainly assist with your working capital loan application." },
+        { speaker: "customer", text: "Thanks! We operate a delivery service and we just purchased 4 new refrigerated vans for our secondary warehouse." },
+        { speaker: "agent", text: "Got it, that's great business growth." }
+      ],
+      compliance: [
+        { speaker: "customer", text: "What would my interest rate be for the $100,000 growth facility?" },
+        { speaker: "agent", text: "Your monthly interest rate is 1.15% per month for an 18-month tenor, let's get your bank statements to finalize approval right away." }
+      ],
+      frustration: [
+        { speaker: "customer", text: "Look, I've already submitted my 6 months bank statements three times this week! Why do you keep asking for the exact same document?" },
+        { speaker: "agent", text: "Our portal requires the PDF format." }
+      ],
+      noisy: [
+        { speaker: "customer", text: "[background traffic noise] ... hello? Yeah ... [muffled coughing] ... just checking ... [unintelligible]" }
+      ]
+    };
+
+    let chunkCount = 0;
+
+    async function runSimulation() {
+      const scenarioKey = document.getElementById("scenario-selector").value;
+      const chunks = TEST_SCENARIOS[scenarioKey];
+      document.getElementById("pipeline-status").innerText = "STREAMING ACTIVE (1X SPEED)";
+
+      for (const chunk of chunks) {
+        chunkCount++;
+        document.getElementById("chunk-counter").innerText = `Chunks: ${chunkCount}`;
+        appendChunk(chunk.speaker, chunk.text);
+
+        // Call backend real-time processing API
+        try {
+          const res = await fetch("/api/realtime/process_chunk", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ speaker: chunk.speaker, text: chunk.text })
+          });
+          const data = await res.json();
+          if (data.nudge) {
+            appendNudge(data.nudge);
+          }
+          if (data.latency_summary) {
+            updateLatency(data.latency_summary);
+          }
+        } catch (e) {
+          console.error(e);
+        }
+
+        // Simulate 1.5s real-time streaming delay between audio turns
+        await new Promise(r => setTimeout(r, 1500));
+      }
+
+      document.getElementById("pipeline-status").innerText = "CALL COMPLETED";
+    }
+
+    function appendChunk(speaker, text) {
+      const feed = document.getElementById("stream-feed");
+      if (chunkCount === 1) feed.innerHTML = "";
+
+      const item = document.createElement("div");
+      item.className = `feed-item ${speaker}`;
+      item.innerHTML = `
+        <span class="speaker-tag ${speaker === 'agent' ? 'speaker-agent' : 'speaker-customer'}">
+          ${speaker === 'agent' ? '🎙️ Darwix Agent' : '👤 Customer'} &bull; Just now
+        </span>
+        <div class="chunk-bubble">${text}</div>
+      `;
+      feed.appendChild(item);
+      feed.scrollTop = feed.scrollHeight;
+    }
+
+    function appendNudge(nudge) {
+      const container = document.getElementById("nudges-stream");
+      if (container.innerText.includes("No live alerts yet")) container.innerHTML = "";
+
+      const card = document.createElement("div");
+      let typeClass = "nudge-crosssell";
+      let badgeClass = "badge-crosssell";
+      let label = "CROSS-SELL OPPORTUNITY";
+
+      if (nudge.signal_type === "compliance_gap") {
+        typeClass = "nudge-compliance";
+        badgeClass = "badge-compliance";
+        label = "⚠️ MANDATORY COMPLIANCE GAP";
+      } else if (nudge.signal_type === "rising_frustration") {
+        typeClass = "nudge-frustration";
+        badgeClass = "badge-frustration";
+        label = "🚨 CUSTOMER FRUSTRATION DETECTED";
+      }
+
+      card.className = `nudge-card ${typeClass}`;
+      card.innerHTML = `
+        <div class="nudge-header">
+          <span class="nudge-badge ${badgeClass}">${label}</span>
+          <span style="font-size: 0.72rem; color: var(--text-muted); font-family: monospace;">Conf: ${(nudge.confidence * 100).toFixed(0)}%</span>
+        </div>
+        <div class="nudge-content">${nudge.nudge_text}</div>
+        <div class="nudge-evidence">Evidence: "${nudge.evidence}"</div>
+      `;
+      container.prepend(card);
+    }
+
+    function updateLatency(summary) {
+      if (summary.end_to_end) {
+        document.getElementById("lat-p50").innerText = `${summary.end_to_end.p50_ms} ms`;
+        document.getElementById("lat-p95").innerText = `${summary.end_to_end.p95_ms} ms`;
+      }
+      if (summary.component_breakdown_p50_ms) {
+        document.getElementById("lat-asr").innerText = `${summary.component_breakdown_p50_ms.asr_transcription} ms`;
+        document.getElementById("lat-llm").innerText = `${summary.component_breakdown_p50_ms.signal_extraction_llm} ms`;
+      }
+    }
+
+    function clearFeed() {
+      chunkCount = 0;
+      document.getElementById("stream-feed").innerHTML = `
+        <div style="text-align: center; color: var(--text-muted); padding: 3rem; font-size: 0.9rem;">
+          Click <b>"Start Live Stream Simulation"</b> below to stream call audio in real-time chunks.
+        </div>
+      `;
+      document.getElementById("nudges-stream").innerHTML = `
+        <div style="text-align: center; color: var(--text-muted); padding: 2rem; font-size: 0.85rem;">
+          No live alerts yet. Monitoring audio stream...
+        </div>
+      `;
+      document.getElementById("chunk-counter").innerText = "Chunks: 0";
+    }
+  </script>
+</body>
+</html>
